@@ -54,32 +54,35 @@ class _DashboardState extends State<Dashboard> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                   )),
-              ListTile(
-                leading: Icon(Icons.home, size: 32.0),
-                title: Text(
-                  "Rooms",
-                  style: TextStyle(fontSize: 18.0),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, "/rooms"),
+                child: ListTile(
+                  leading: Icon(Icons.home, size: 32.0),
+                  title: Text(
+                    "Rooms",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.dashboard, size: 32.0),
-                title: Text(
-                  "Dashboard",
-                  style: TextStyle(fontSize: 18.0),
+
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, "/notification"),
+                child: ListTile(
+                  leading: Icon(Icons.notifications, size: 32.0),
+                  title: Text(
+                    "Notification",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.notifications, size: 32.0),
-                title: Text(
-                  "Notification",
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.info, size: 32.0),
-                title: Text(
-                  "About Us",
-                  style: TextStyle(fontSize: 18.0),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, "/about"),
+                child: ListTile(
+                  leading: Icon(Icons.info, size: 32.0),
+                  title: Text(
+                    "About Us",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                 ),
               ),
               GestureDetector(
@@ -126,9 +129,9 @@ class _DashboardState extends State<Dashboard> {
                           style: TextStyle(fontSize: 22.0),
                         ),
                         GestureDetector(
-                            onTap: () =>
-                                Navigator.pushNamed(context, "/settings"),
-                            child: Icon(
+                            onTap: () {
+                              Navigator.pushNamed(context, "/settings");
+                            }, child: Icon(
                               Icons.settings,
                               size: 28.0,
                             ))

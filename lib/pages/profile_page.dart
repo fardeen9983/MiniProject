@@ -67,7 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Container(
-                    width: MediaQuery.of(key.currentContext).size.width * 0.9,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.9,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[

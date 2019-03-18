@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'pages/about_page.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_page.dart';
+import 'pages/notification_page.dart';
 import 'pages/profile_page.dart';
+import 'pages/room_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/splash_page.dart';
 
@@ -16,6 +19,9 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         routes: {
+          "/rooms": (context) => RoomPage(),
+          "/notification": (context) => NotificationPage(),
+          "/about": (context) => AboutPage(),
           "/login": (context) => LoginPage(),
           "/dashboard": (context) => Dashboard(),
           "/settings": (context) => SettingsPage(),

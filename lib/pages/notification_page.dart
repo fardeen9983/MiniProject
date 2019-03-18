@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatefulWidget {
+class NotificationPage extends StatefulWidget {
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _NotificationPageState createState() => _NotificationPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+class _NotificationPageState extends State<NotificationPage> {
+  final key = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               size: 28.0,
                             )),
                         Text(
-                          "Settings",
+                          "Notifications",
                           style: TextStyle(fontSize: 22.0),
                         ),
                         Text("   ", style: TextStyle(fontSize: 22.0))

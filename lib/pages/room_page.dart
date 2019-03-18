@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatefulWidget {
+class RoomPage extends StatefulWidget {
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _RoomPageState createState() => _RoomPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+class _RoomPageState extends State<RoomPage> {
+  final key = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,10 @@ class _SettingsPageState extends State<SettingsPage> {
                               size: 28.0,
                             )),
                         Text(
-                          "Settings",
+                          "Rooms",
                           style: TextStyle(fontSize: 22.0),
                         ),
-                        Text("   ", style: TextStyle(fontSize: 22.0))
+                        Text(" ")
                       ],
                     ),
                   ),
