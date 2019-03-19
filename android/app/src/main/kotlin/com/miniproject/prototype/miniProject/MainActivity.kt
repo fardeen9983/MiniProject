@@ -1,4 +1,4 @@
-package com.miniproject.prototype.mini_project
+package com.miniproject.prototype.miniProject
 
 import android.os.Bundle
 import android.util.Log

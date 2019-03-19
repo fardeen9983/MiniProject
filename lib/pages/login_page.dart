@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,14 +9,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController mail, password;
+  TextEditingController mailController, passwordController;
   final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+  FirebaseAuth firebaseAuth;
+  String password, mail;
 
   @override
   void initState() {
     super.initState();
-    mail = TextEditingController();
-    password = TextEditingController();
+    mailController = TextEditingController();
+    passwordController = TextEditingController();
+    firebaseAuth = FirebaseAuth.instance;
   }
 
   @override
@@ -42,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        controller: mail,
+                        controller: mailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -54,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        controller: password,
+                        controller: passwordController,
                         style: TextStyle(),
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
@@ -91,14 +95,13 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(18.0),
               child: FlatButton(
                 onPressed: () {
-                  String password = this.password.text;
-                  String mail = this.mail.text;
+                  password = passwordController.text;
+                  mail = mailController.text;
                   if (password.isEmpty || mail.isEmpty) {
                     key.currentState.showSnackBar(SnackBar(
                         content: Text("Please enter all credentials")));
                   } else {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Dashboard()));
+                    signIn(context);
                   }
                 },
                 child: Card(
@@ -121,10 +124,22 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    mail.dispose();
-    password.dispose();
+    mailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
-  void signIn(BuildContext context) {}
+  void signIn(BuildContext context) {
+    firebaseAuth
+        .signInWithEmailAndPassword(email: mail, password: password)
+        .then((user) {
+      SharedPreferences.getInstance().then((data) {
+        data.setBool("loggedin", true);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
+      });
+    }).catchError((e) =>
+        key.currentState.showSnackBar(SnackBar(
+            content: Text("Error : $e \nUnable to sign in try again"))));
+  }
 }

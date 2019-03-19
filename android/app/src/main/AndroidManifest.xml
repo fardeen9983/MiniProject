@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.miniproject.prototype.mini_project">
+    package="com.miniproject.prototype.miniProject">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -11,7 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="mini_project">
         <activity
-            android:name=".MainActivity"
+            android:name="com.miniproject.prototype.miniProject.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"

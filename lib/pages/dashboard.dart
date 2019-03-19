@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -7,38 +8,56 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+  final firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser user;
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseAuth.currentUser().then((user) {
+      setState(() {
+        this.user = user;
+        loaded = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return !loaded ? CircularProgressIndicator() : Scaffold(
       key: key,
       drawer: Drawer(
         child: Padding(
-          padding: const EdgeInsets.only(top: 28.0),
+          padding: const EdgeInsets.only(top: 28.0, bottom: 48.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Icon(
-                          Icons.account_circle,
-                          size: 52.0,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 28.0),
+                child: Container(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Icon(
+                            Icons.account_circle,
+                            size: 52.0,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 18.0),
-                        child: Text(
-                          "Het Saliya",
-                          style: TextStyle(fontSize: 26.0),
-                        ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 18.0),
+                          child: Text(
+                            this.user.displayName == null ? "Unnamed" : this
+                                .user.displayName,
+                            style: TextStyle(fontSize: 26.0),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -51,15 +70,15 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     title: Text(
                       "Profile",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 18.0,),
                     ),
                   )),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, "/rooms"),
+                onTap: () => Navigator.pushNamed(context, "/blocks"),
                 child: ListTile(
                   leading: Icon(Icons.home, size: 32.0),
                   title: Text(
-                    "Rooms",
+                    "Blocks",
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ),
@@ -87,7 +106,10 @@ class _DashboardState extends State<Dashboard> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.popAndPushNamed(context, "/login");
+                  SharedPreferences.getInstance().then((data) {
+                    data.setBool("loggedin", false);
+                    Navigator.popAndPushNamed(context, "/login");
+                  });
                 },
                 child: ListTile(
                   leading: Icon(Icons.dashboard, size: 32.0),

@@ -112,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       vertical: 8.0, horizontal: 24.0),
                                   child: TextField(
                                     keyboardType: TextInputType.emailAddress,
-                                    enabled: editable,
+                                    enabled: false,
                                     decoration: InputDecoration(
                                       labelText: "Email",
                                     ),
@@ -148,4 +148,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+}
+
+class DisableFocus extends FocusNode {
+
+  @override
+  bool get hasFocus => false;
 }

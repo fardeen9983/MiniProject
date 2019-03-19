@@ -15,7 +15,11 @@ class Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0, left: 8.0, right: 8.0,),
+      padding: const EdgeInsets.only(
+          bottom: 12.0,
+          left: 8.0,
+          right: 8.0, top: 8.0
+      ),
       child: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -34,6 +38,12 @@ class Room extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            Container(
+              width: 1.0,
+              height: 12.0,
+              color: Colors.black,
+              margin: EdgeInsets.symmetric(vertical: 10.0),
             ),
             Container(
               child: Column(
