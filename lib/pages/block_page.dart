@@ -60,29 +60,32 @@ class _BlockPageState extends State<BlockPage> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    right: 8.0,
-                    left: 8.0,
-                  ),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 12.0, left: 8.0, right: 8.0, top: 8.0),
-                          child: ListView.builder(
-                              itemCount: blocks.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                    child: blocks[index],
-                                    onTap: () =>
-                                        Navigator.pushNamed(context, "/rooms"),
-                                  )),
-                        )),
-                  ),
-                ),
+                child: Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.95,
+                    padding: const EdgeInsets.only(
+                        bottom: 12.0, left: 8.0, right: 8.0, top: 8.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: ListView.builder(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 14.0),
+                          itemCount: blocks.length,
+                          itemBuilder: (context, index) =>
+                              GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0),
+                                  child: Card(
+                                      elevation: 3.0, child: blocks[index]),
+                                ),
+                                onTap: () =>
+                                    Navigator.pushNamed(context, "/rooms"),
+                              )),
+                    )),
               ),
             ],
           ),

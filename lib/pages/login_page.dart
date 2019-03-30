@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,92 +26,102 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       key: key,
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: <Color>[
-          Color.fromARGB(32, 23, 344, 100),
-          Color.fromARGB(88, 23, 344, 100)
-        ])),
+        decoration: BoxDecoration(color: Colors.blue),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Spacer(),
-            Card(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: mailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                            labelText: "Email",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                      ),
+            Container(
+                margin: EdgeInsets.symmetric(vertical: 58.0),
+                child: Image(
+                  image: AssetImage("assets/logo.png"),
+                )),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 18.0),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.0)),
+              padding: EdgeInsets.all(14.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: mailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          labelText: "Email",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0))),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: passwordController,
-                        style: TextStyle(),
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                            labelText: "Password",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0))),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: passwordController,
+                      style: TextStyle(),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          labelText: "Password",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0))),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FlatButton(
-                            onPressed: null,
-                            child: Text("Forgot Password"),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlatButton(
+                          onPressed: null,
+                          child: Text(
+                            "Forgot Password",
+                            style: TextStyle(fontSize: 16.0),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FlatButton(
-                            child: Text("Create account"),
-                            onPressed: null,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlatButton(
+                          child: Text(
+                            "Create account",
+                            style: TextStyle(fontSize: 16.0),
                           ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                          onPressed: null,
+                        ),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: FlatButton(
-                onPressed: () {
-                  password = passwordController.text;
-                  mail = mailController.text;
-                  if (password.isEmpty || mail.isEmpty) {
-                    key.currentState.showSnackBar(SnackBar(
-                        content: Text("Please enter all credentials")));
-                  } else {
-                    signIn(context);
-                  }
-                },
+            FlatButton(
+              onPressed: () {
+                password = passwordController.text;
+                mail = mailController.text;
+                if (password.isEmpty || mail.isEmpty) {
+                  key.currentState.showSnackBar(
+                      SnackBar(content: Text("Please enter all credentials")));
+                } else {
+                  signIn(context);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(28.0),
                 child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0, vertical: 8.0),
+                        horizontal: 38.0, vertical: 8.0),
                     child: Text(
                       "Log In",
-                      style: TextStyle(fontSize: 18.0),
+                      style: TextStyle(fontSize: 22.0),
                     ),
                   ),
                 ),
