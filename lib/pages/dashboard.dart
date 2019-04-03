@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../layouts/dashboard_tile.dart';
-
+import '../layouts/room_tile.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -13,10 +15,12 @@ class _DashboardState extends State<Dashboard> {
   final firebaseAuth = FirebaseAuth.instance;
   FirebaseUser user;
   bool loaded = false;
+  List<Room> rooms;
 
   @override
   void initState() {
     super.initState();
+    rooms = List();
     firebaseAuth.currentUser().then((user) {
       setState(() {
         this.user = user;
@@ -81,11 +85,11 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   )),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, "/blocks"),
+                onTap: () => Navigator.pushNamed(context, "/rooms"),
                 child: ListTile(
                   leading: Icon(Icons.home, size: 32.0),
                   title: Text(
-                    "Blocks",
+                    "Rooms",
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ),
@@ -208,27 +212,28 @@ class _DashboardState extends State<Dashboard> {
                             Expanded(
                               child: ListView.builder(
                                   scrollDirection: Axis.vertical,
-                                  itemCount: 34,
+                                  itemCount: 2,
                                   itemBuilder: (context, i) =>
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 18.0,
+                                            horizontal: 6.0),
                                         child: SizedBox(
                                           width: 120.0,
-                                          height: 80.0,
+                                          height: 130.0,
                                           child: ListView.builder(
                                             scrollDirection:
                                             Axis.horizontal,
-                                            itemBuilder:
-                                                (context, index) =>
+                                            itemBuilder: (context,
+                                                index) =>
                                                 Padding(
-                                                  padding: EdgeInsets
-                                                      .only(
-                                                      right:
-                                                      18.0),
-                                                  child:
-                                                  DashboardTile(),
+                                                  padding:
+                                                  EdgeInsets.only(
+                                                      right: 18.0),
+                                                  child: DashboardTile(),
                                                 ),
-                                            itemCount: 34,
+                                            itemCount: 1,
                                           ),
                                         ),
                                       )),
@@ -244,4 +249,11 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+
+  void fetchRooms() async {
+    var response = await http.get(
+        "13.234.156.214/web1/application/getRoomsByUser.php?USER_ID=${user
+            .uid}");
+  }
+
 }

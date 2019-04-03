@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -78,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FlatButton(
-                          onPressed: null,
+                          onPressed: () {},
                           child: Text(
                             "Forgot Password",
                             style: TextStyle(fontSize: 16.0),
@@ -151,6 +150,6 @@ class _LoginPageState extends State<LoginPage> {
       });
     }).catchError((e) =>
         key.currentState.showSnackBar(SnackBar(
-            content: Text("Error : $e \nUnable to sign in try again"))));
+            content: Text("Error : Unable to sign in try again"))));
   }
 }

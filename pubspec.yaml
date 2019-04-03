@@ -23,6 +23,7 @@ dependencies:
   flutter_svg: ^0.12.0
   shared_preferences: ^0.5.1+2
   splashscreen: ^1.2.0
+  http: ^0.12.0+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +52,9 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
   - assets/logo.png
+  - assets/green_ok.png
+  - assets/error.png
+  - assets/warning.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 

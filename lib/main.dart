@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'pages/history_page.dart';
 import 'pages/about_page.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_page.dart';
@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
           "/dashboard": (context) => Dashboard(),
           "/settings": (context) => SettingsPage(),
           "/profile": (context) => ProfilePage(),
-          "/blocks": (context) => BlockPage()
+          "/blocks": (context) => BlockPage(),
+          "/history": (context) => HistoryPage()
         },
         home: SplashPage());
   }
