@@ -13,13 +13,19 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   FirebaseAuth firebaseAuth;
   String password, mail;
-
+  SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
     mailController = TextEditingController();
     passwordController = TextEditingController();
     firebaseAuth = FirebaseAuth.instance;
+    SharedPreferences.getInstance()
+      ..then((prefs) {
+        setState(() {
+          this.prefs = prefs;
+        });
+      });
   }
 
   @override
@@ -143,11 +149,10 @@ class _LoginPageState extends State<LoginPage> {
     firebaseAuth
         .signInWithEmailAndPassword(email: mail, password: password)
         .then((user) {
-      SharedPreferences.getInstance().then((data) {
-        data.setBool("loggedin", true);
+      prefs.setBool("loggedin", true);
+      prefs.setString("uid", user.uid);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Dashboard()));
-      });
     }).catchError((e) =>
         key.currentState.showSnackBar(SnackBar(
             content: Text("Error : Unable to sign in try again"))));

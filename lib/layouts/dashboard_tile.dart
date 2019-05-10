@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'room_tile.dart';
-
+import '../pages/history_page.dart';
 class DashboardTile extends StatelessWidget {
   final Room room;
 
-  const DashboardTile({Key key, this.room}) : super(key: key);
+  const DashboardTile({Key key, @required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => HistoryPage(room: room,))),
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
@@ -21,7 +23,7 @@ class DashboardTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  "A203",
+                  room.name,
                   style: TextStyle(fontSize: 24.0),
                   textAlign: TextAlign.center,
                 ),
@@ -44,7 +46,7 @@ class DashboardTile extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
-                              "32 W",
+                              "${room.yesterday} W",
                               style:
                               TextStyle(fontSize: 24.0, color: Colors.green),
                             ),
@@ -64,7 +66,7 @@ class DashboardTile extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
-                              "32 W",
+                              "${room.monthly} W",
                               style:
                               TextStyle(fontSize: 24.0, color: Colors.green),
                             ),

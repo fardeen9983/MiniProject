@@ -3,6 +3,7 @@ import 'dart:async';
 import '../layouts/room_tile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 class RoomPage extends StatefulWidget {
   @override
   _RoomPageState createState() => _RoomPageState();
@@ -16,51 +17,6 @@ class _RoomPageState extends State<RoomPage> {
   void initState() {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 3), (t) => fetchRooms());
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A201",
-//      type: "LAB",
-//      current: 1.0,
-//    ));
-//    rooms.add(Room(
-//      no: "A203",
-//      type: "LAB",  `
-//      current: 1.0,
-//    ));
   }
 
   @override
@@ -76,82 +32,84 @@ class _RoomPageState extends State<RoomPage> {
     Map<String, dynamic> map = x[0];
     rooms.clear();
     rooms.add(Room.fromJson(map));
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Navigator.pushReplacementNamed(context, "/dashboard"),
-      child: Scaffold(
-        key: key,
-        body: Container(
-          color: Colors.blue,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+    return Scaffold(
+      key: key,
+      body: Container(
+        color: Colors.blue,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 28.0,
+                            )),
+                        Text(
+                          "Rooms",
+                          style: TextStyle(fontSize: 22.0),
+                        ),
+                        Text(" ")
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 8.0,
+                    left: 8.0,
+                  ),
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 18.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              child: Icon(
-                                Icons.arrow_back,
-                                size: 28.0,
-                              )),
-                          Text(
-                            "Rooms",
-                            style: TextStyle(fontSize: 22.0),
+                    child: Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.9,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 12.0, left: 8.0, right: 8.0, top: 8.0),
+                          child: rooms.isEmpty
+                              ? Padding(
+                            padding: EdgeInsets.all(30.0),
+                            child: CircularProgressIndicator(),
+                          )
+                              : ListView.builder(
+                            itemCount: rooms.length,
+                            itemBuilder: (context, index) =>
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0)),
+                                  child: rooms[index],
+                                  elevation: 3.0,
+                                ),
                           ),
-                          Text(" ")
-                        ],
-                      ),
-                    ),
+                        )),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 8.0,
-                      left: 8.0,
-                    ),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.9,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 12.0, left: 8.0, right: 8.0, top: 8.0),
-                            child: ListView.builder(
-                              itemCount: rooms.length,
-                              itemBuilder: (context, index) =>
-                                  Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            8.0)),
-                                    child: rooms[index], elevation: 3.0,),
-                            ),
-                          )),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

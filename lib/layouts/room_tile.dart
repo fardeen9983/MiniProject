@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../pages/history_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:date_format/date_format.dart';
 
 class Room extends StatelessWidget {
   final String name, id;
@@ -7,16 +10,52 @@ class Room extends StatelessWidget {
   final int state;
   final Widget imageIcon;
   final bool switch1;
+  double yesterday, monthly;
 
-  const Room({Key key,
+  Room({Key key,
     @required this.name,
     @required this.current,
     @required this.state,
     @required this.id,
-    this.imageIcon, @required this.switch1})
+    this.imageIcon,
+    @required this.switch1})
       : super(key: key);
 
+  static Future<Room> fromUser(Map<String, dynamic> map) async {
+    Room room = Room(
+      name: map["ROOM_NAME"],
+      current: null,
+      state: null,
+      id: map["ROOM_ID"],
+      switch1: map["SWITCH"] == 0 ? false : true,
+    );
+    DateTime now = DateTime.now();
+    DateTime prev = DateTime(now.year, now.month, now.day - 1);
+    String day = formatDate(prev, [yyyy, "-", mm, "-", dd]);
+    var response = await http.get(
+        "http://13.234.156.214/web1/application/getRoomDailyPowerByDate.php?ROOM_ID=${room
+            .id}&DATE=$day");
+    print(response.body);
+    print(day);
+    if ((json.decode(response.body) as List<dynamic>).isNotEmpty)
+      room.yesterday = double.parse((json.decode(response.body)
+      as List<dynamic>)[0]["TOTAL_POWER_CONSUMED"]);
+    else
+      room.yesterday = -1;
+
+    response = await http.get(
+        "http://13.234.156.214/web1/application/getMonthlyPowerByMonth.php?ROOM_ID=${room
+            .id}&YEAR=${now.year}&MONTH=${now.month - 1}");
+    if ((json.decode(response.body) as List<dynamic>).isNotEmpty)
+      room.monthly = double.parse(
+          (json.decode(response.body) as List<dynamic>)[0]["TOTAL_POWER"]);
+    else
+      room.monthly = -1;
+    return room;
+  }
+
   static Room fromJson(Map<String, dynamic> map) {
+    print(map);
     var switch1 = double.parse(map["CURRENT_DRAW"]),
         presence = int.parse(map["PRESENCE"]);
     var state = getState(switch1, presence);
@@ -46,9 +85,9 @@ class Room extends StatelessWidget {
   }
 
   static int getState(double x, int y) {
-    if ((x > 0.3 && y == 1))
+    if ((x > 0.6 && y == 1))
       return 1;
-    else if (x > 0.3 && y == 0)
+    else if (x > 0.6 && y == 0)
       return -1;
     else
       return 0;

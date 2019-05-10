@@ -5,6 +5,7 @@ import '../layouts/dashboard_tile.dart';
 import '../layouts/room_tile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -16,15 +17,19 @@ class _DashboardState extends State<Dashboard> {
   FirebaseUser user;
   bool loaded = false;
   List<Room> rooms;
-
+  SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
     rooms = List();
-    firebaseAuth.currentUser().then((user) {
-      setState(() {
-        this.user = user;
-        loaded = true;
+    SharedPreferences.getInstance().then((prefs) {
+      this.prefs = prefs;
+      firebaseAuth.currentUser().then((user) {
+        setState(() {
+          this.user = user;
+          loaded = true;
+          fetchRooms(user.uid);
+        });
       });
     });
   }
@@ -95,17 +100,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               GestureDetector(
-                onTap: () =>
-                    Navigator.pushNamed(context, "/notification"),
-                child: ListTile(
-                  leading: Icon(Icons.notifications, size: 32.0),
-                  title: Text(
-                    "Notification",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ),
-              ),
-              GestureDetector(
                 onTap: () => Navigator.pushNamed(context, "/about"),
                 child: ListTile(
                   leading: Icon(Icons.info, size: 32.0),
@@ -117,10 +111,9 @@ class _DashboardState extends State<Dashboard> {
               ),
               GestureDetector(
                 onTap: () {
-                  SharedPreferences.getInstance().then((data) {
-                    data.setBool("loggedin", false);
-                    Navigator.pushReplacementNamed(context, "/login");
-                  });
+                  prefs.setBool("loggedin", false);
+                  firebaseAuth.signOut();
+                  Navigator.pushReplacementNamed(context, "/login");
                 },
                 child: ListTile(
                   leading: Icon(Icons.dashboard, size: 32.0),
@@ -209,35 +202,25 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               padding: EdgeInsets.all(12.0),
                             ),
-                            Expanded(
-                              child: ListView.builder(
+                            rooms.isEmpty
+                                ? Padding(
+                                padding: EdgeInsets.all(18.0),
+                                child: CircularProgressIndicator())
+                                : Expanded(
+                                child: GridView.builder(
+                                  gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                                  itemCount: rooms.length,
                                   scrollDirection: Axis.vertical,
-                                  itemCount: 2,
-                                  itemBuilder: (context, i) =>
+                                  itemBuilder: (context, index) =>
                                       Padding(
-                                        padding:
-                                        const EdgeInsets.symmetric(
-                                            vertical: 18.0,
-                                            horizontal: 6.0),
-                                        child: SizedBox(
-                                          width: 120.0,
-                                          height: 130.0,
-                                          child: ListView.builder(
-                                            scrollDirection:
-                                            Axis.horizontal,
-                                            itemBuilder: (context,
-                                                index) =>
-                                                Padding(
-                                                  padding:
-                                                  EdgeInsets.only(
-                                                      right: 18.0),
-                                                  child: DashboardTile(),
-                                                ),
-                                            itemCount: 1,
-                                          ),
+                                        padding: EdgeInsets.all(5.0),
+                                        child: DashboardTile(
+                                          room: rooms[index],
                                         ),
-                                      )),
-                            ),
+                                      ),
+                                )),
                           ],
                         )),
                   ),
@@ -250,10 +233,14 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void fetchRooms() async {
+  void fetchRooms(String uid) async {
     var response = await http.get(
-        "13.234.156.214/web1/application/getRoomsByUser.php?USER_ID=${user
-            .uid}");
+        "http://13.234.156.214/web1/application/getRoomsByUser.php?USER_ID=test");
+    List<dynamic> x = json.decode(response.body);
+    for (dynamic y in x) {
+      Room room = await Room.fromUser(y);
+      rooms.add(room);
+    }
+    setState(() {});
   }
-
 }
