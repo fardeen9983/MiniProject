@@ -10,6 +10,7 @@ class Room extends StatelessWidget {
   final int state;
   final Widget imageIcon;
   final bool switch1;
+  final bool auto;
   double yesterday, monthly;
 
   Room({Key key,
@@ -17,6 +18,7 @@ class Room extends StatelessWidget {
     @required this.current,
     @required this.state,
     @required this.id,
+    @required this.auto,
     this.imageIcon,
     @required this.switch1})
       : super(key: key);
@@ -27,7 +29,8 @@ class Room extends StatelessWidget {
       current: null,
       state: null,
       id: map["ROOM_ID"],
-      switch1: map["SWITCH"] == 0 ? false : true,
+      switch1: map["SWITCH"] == "1" ? true : false,
+      auto: map["SWITCH"] == "-1" ? true : false,
     );
     DateTime now = DateTime.now();
     DateTime prev = DateTime(now.year, now.month, now.day - 1);
@@ -41,7 +44,7 @@ class Room extends StatelessWidget {
       room.yesterday = double.parse((json.decode(response.body)
       as List<dynamic>)[0]["TOTAL_POWER_CONSUMED"]);
     else
-      room.yesterday = -1;
+      room.yesterday = 0;
 
     response = await http.get(
         "http://13.234.156.214/web1/application/getMonthlyPowerByMonth.php?ROOM_ID=${room
@@ -54,13 +57,16 @@ class Room extends StatelessWidget {
     return room;
   }
 
+
   static Room fromJson(Map<String, dynamic> map) {
     print(map);
     var switch1 = double.parse(map["CURRENT_DRAW"]),
         presence = int.parse(map["PRESENCE"]);
     var state = getState(switch1, presence);
+
     return Room(
-      switch1: map["SWITCH"] == 1 ? true : false,
+      switch1: map["SWITCH"] == "1" ? true : false,
+      auto: map["SWITCH"] == "-1" ? true : false,
       id: map["ROOM_ID"],
       name: map["ROOM_NAME"],
       current: map["CURRENT_DRAW"],
@@ -85,7 +91,7 @@ class Room extends StatelessWidget {
   }
 
   static int getState(double x, int y) {
-    if ((x > 0.6 && y == 1))
+    if ((x > 0.6 && y == 1) || x < 0.6)
       return 1;
     else if (x > 0.6 && y == 0)
       return -1;

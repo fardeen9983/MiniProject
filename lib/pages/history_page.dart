@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../layouts/room_tile.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../layouts/room_tile.dart';
 
 class HistoryPage extends StatefulWidget {
   final Room room;
@@ -15,34 +15,40 @@ class HistoryPage extends StatefulWidget {
 enum HistoryChoice { daily, monthly }
 
 class _HistoryPageState extends State<HistoryPage> {
-  @override
+
+
   Text auto = Text(
     "Auto",
-    style: TextStyle(fontSize: 22.0, color: Colors.white),
+    style: TextStyle(fontSize: 20.0, color: Colors.white),
   ),
       on = Text(
         "ON",
-        style: TextStyle(fontSize: 22.0, color: Colors.white),
+        style: TextStyle(fontSize: 20.0, color: Colors.white),
       ),
       daily = Text(
         "Daily",
-        style: TextStyle(fontSize: 22.0, color: Colors.white),
+        style: TextStyle(fontSize: 20.0, color: Colors.white),
       ),
       monthly = Text(
         "Monthly",
-        style: TextStyle(fontSize: 22.0, color: Colors.white),
+        style: TextStyle(fontSize: 20.0, color: Colors.white),
       );
 
-  bool autoBool;
-  SharedPreferences prefs;
+  bool autoBool, autoBool2;
   HistoryChoice state = HistoryChoice.daily;
+
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((prefs) => this.prefs = prefs);
-    autoBool = widget.room.switch1;
 
+    autoBool = widget.room.auto;
+    autoBool2 = widget.room.switch1;
+//   autoBool = false;
+//   autoBool2 = false;
+    if (autoBool == null) autoBool = false;
+    if (autoBool2 == null) autoBool2 = false;
     print(autoBool);
+    print(autoBool2);
   }
 
   Widget build(BuildContext context) {
@@ -88,17 +94,22 @@ class _HistoryPageState extends State<HistoryPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         auto,
-                        Switch(
+                        Checkbox(
                           value: autoBool,
-                          onChanged: onAutoToMan,
+                          onChanged: (bool value) {
+                            onAutoToMan(value);
+                          },
                           activeColor: Colors.green,
+                          //  checkColor: Colors.blue,
                         ),
                         on,
-                        Switch(
-                          value: autoBool,
-                          onChanged: onOff,
+                        Checkbox(
+                          value: autoBool2,
+                          onChanged: (value) {
+                            onOff(value);
+                          },
                           activeColor: Colors.green,
-                          inactiveTrackColor: Colors.grey,
+                          //  inactiveTrackColor: Colors.grey,
                         ),
                       ],
                     ),
@@ -116,7 +127,6 @@ class _HistoryPageState extends State<HistoryPage> {
                         monthly,
                         Radio(
                             activeColor: Colors.white,
-
                             value: HistoryChoice.monthly,
                             groupValue: state,
                             onChanged: controlHistory),
@@ -148,31 +158,56 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  void onAutoToMan(bool state) async {
-    autoBool = state;
-    var response;
-    if (autoBool == false)
-      response = await http.get(
-          "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
-              .room.id}&SWITCH=0");
+  var x = "pattern: ";
+
+  void onAutoToMan(bool value) async {
+    setState(() {
+      autoBool = value;
+    });
+    autoBool = value;
+    if (autoBool)
+      debugPrint("pattern True");
     else
-      response = await http.get(
-          "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
-              .room.id}&SWITCH=1");
+      debugPrint("pattern False");
+    var response;
+    if (autoBool == false) {
+      x = "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
+          .room.id}&SWITCH=0";
+      response = await http.get(x);
+      //  prefs.setBool('autoBool'+widget.room.id, false);
+    } else {
+      x = "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
+          .room.id}&SWITCH=-1";
+      setState(() {
+        autoBool2 = false;
+      });
+      response = await http.get(x);
+      //  prefs.setBool('autoBool'+widget.room.id, true);
+
+    }
+    debugPrint("pattern " + x);
   }
 
   void onOff(bool state) async {
-    if (!autoBool) {
-      var response;
-      if (state)
-        response = await http.get(
-            "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
-                .room.id}&SWITCH=1");
-      else
-        response = await http.get(
-            "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
-                .room.id}&SWITCH=0");
-    }
+    autoBool2 = state;
+    setState(() {
+      autoBool2 = state;
+      autoBool = false;
+    });
+    // if (!autoBool) {
+    var response;
+    if (state) {
+      x = "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
+          .room.id}&SWITCH=1";
+      response = await http.get(x);
+      //     prefs.setBool('autoBool2'+widget.room.id, true);
+    } else
+      x = "http://13.234.156.214/web1/application/setSwitch.php?ROOM_ID=${widget
+          .room.id}&SWITCH=0";
+    response = await http.get(x);
+    //  prefs.setBool('autoBool2'+widget.room.id, false);
+    // }
+    debugPrint(x);
   }
 
   void controlHistory(HistoryChoice state) {

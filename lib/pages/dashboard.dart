@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../layouts/dashboard_tile.dart';
 import '../layouts/room_tile.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _DashboardState extends State<Dashboard> {
   bool loaded = false;
   List<Room> rooms;
   SharedPreferences prefs;
+
   @override
   void initState() {
     super.initState();

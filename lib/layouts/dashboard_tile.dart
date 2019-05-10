@@ -8,10 +8,14 @@ class DashboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
+
+
       onTap: () =>
           Navigator.push(context, MaterialPageRoute(
               builder: (context) => HistoryPage(room: room,))),
+
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
@@ -29,56 +33,60 @@ class DashboardTile extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(top: BorderSide(color: Colors.blue,),
-                              right: BorderSide(color: Colors.blue,))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Yesterday"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              "${room.yesterday} W",
-                              style:
-                              TextStyle(fontSize: 24.0, color: Colors.green),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.blue))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                right: BorderSide(color: Colors.blue,))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Text("Yesterday"),
                             ),
-                          )
-                        ],
-                      ),
-                    ), Container(
-                      decoration: BoxDecoration(
-                          border: Border(top: BorderSide(color: Colors.blue,))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Previous Month"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              "${room.monthly} W",
-                              style:
-                              TextStyle(fontSize: 24.0, color: Colors.green),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "${room.yesterday}W",
+                                style:
+                                TextStyle(fontSize: 24.0, color: Colors.green),
+                              ),
+                            )
+                          ],
+                        ),
+                      ), Container(
+
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Text("Previous\nMonth"),
                             ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "${room.monthly}W",
+                                style:
+                                TextStyle(fontSize: 24.0, color: Colors.green),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
           )),
+
     );
   }
 

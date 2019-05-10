@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();

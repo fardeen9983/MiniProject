@@ -27,11 +27,17 @@ class _RoomPageState extends State<RoomPage> {
 
   void fetchRooms() async {
     var response = await http.get(
-        "http://13.234.156.214/web1/application/getRoomStatus.php?ROOM_ID=1");
+        "http://13.234.156.214/web1/application/getRoomsByUser.php?USER_ID=test");
     List<dynamic> x = json.decode(response.body);
-    Map<String, dynamic> map = x[0];
     rooms.clear();
-    rooms.add(Room.fromJson(map));
+    for (dynamic y in x) {
+      //  Map<String, dynamic> map = x[0];
+      Room room = await Room.fromJson(y);
+      rooms.add(room);
+    }
+//    Map<String, dynamic> map = x[0];
+//    rooms.clear();
+//    rooms.add(Room.fromJson(map));
     setState(() {});
   }
 
