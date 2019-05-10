@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'room_tile.dart';
+
 import '../pages/history_page.dart';
+import 'room_tile.dart';
+
 class DashboardTile extends StatelessWidget {
   final Room room;
 
@@ -8,14 +10,15 @@ class DashboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
-
-
       onTap: () =>
-          Navigator.push(context, MaterialPageRoute(
-              builder: (context) => HistoryPage(room: room,))),
-
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      HistoryPage(
+                        room: room,
+                      ))),
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
@@ -40,9 +43,7 @@ class DashboardTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                right: BorderSide(color: Colors.blue,))),
+
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -54,14 +55,22 @@ class DashboardTile extends StatelessWidget {
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
                                 "${room.yesterday}W",
-                                style:
-                                TextStyle(fontSize: 24.0, color: Colors.green),
+                                style: TextStyle(
+                                    fontSize: 24.0, color: Colors.green),
                               ),
                             )
                           ],
                         ),
-                      ), Container(
-
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 4.0, right: 4.0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                right: BorderSide(
+                                  color: Colors.blue,
+                                ))),
+                      ),
+                      Container(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -73,8 +82,8 @@ class DashboardTile extends StatelessWidget {
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
                                 "${room.monthly}W",
-                                style:
-                                TextStyle(fontSize: 24.0, color: Colors.green),
+                                style: TextStyle(
+                                    fontSize: 24.0, color: Colors.green),
                               ),
                             )
                           ],
@@ -86,9 +95,6 @@ class DashboardTile extends StatelessWidget {
               )
             ],
           )),
-
     );
   }
-
-
 }

@@ -83,7 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+
+                          },
                           child: Text(
                             "Forgot Password",
                             style: TextStyle(fontSize: 16.0),
@@ -97,7 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                             "Create account",
                             style: TextStyle(fontSize: 16.0),
                           ),
-                          onPressed: null,
+                          onPressed: () =>
+                              Navigator.pushNamed(context, "/register"),
                         ),
                       )
                     ],

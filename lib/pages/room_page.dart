@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import '../layouts/room_tile.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../layouts/room_tile.dart';
 
 class RoomPage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class _RoomPageState extends State<RoomPage> {
   final key = GlobalKey<ScaffoldState>();
   List<Room> rooms = List();
   Timer timer;
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +35,7 @@ class _RoomPageState extends State<RoomPage> {
     rooms.clear();
     for (dynamic y in x) {
       //  Map<String, dynamic> map = x[0];
-      Room room = await Room.fromJson(y);
+      Room room = Room.fromJson(y);
       rooms.add(room);
     }
 //    Map<String, dynamic> map = x[0];
@@ -78,7 +81,18 @@ class _RoomPageState extends State<RoomPage> {
                   ),
                 ),
               ),
-              Expanded(
+              rooms.isEmpty
+                  ? Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      )
+                    ],
+                  ))
+                  : Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(
                     right: 8.0,
@@ -94,13 +108,11 @@ class _RoomPageState extends State<RoomPage> {
                             .width * 0.9,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              bottom: 12.0, left: 8.0, right: 8.0, top: 8.0),
-                          child: rooms.isEmpty
-                              ? Padding(
-                            padding: EdgeInsets.all(30.0),
-                            child: CircularProgressIndicator(),
-                          )
-                              : ListView.builder(
+                              bottom: 12.0,
+                              left: 8.0,
+                              right: 8.0,
+                              top: 8.0),
+                          child: ListView.builder(
                             itemCount: rooms.length,
                             itemBuilder: (context, index) =>
                                 Card(

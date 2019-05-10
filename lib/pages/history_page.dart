@@ -1,3 +1,5 @@
+import "dart:convert";
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,8 +17,6 @@ class HistoryPage extends StatefulWidget {
 enum HistoryChoice { daily, monthly }
 
 class _HistoryPageState extends State<HistoryPage> {
-
-
   Text auto = Text(
     "Auto",
     style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -34,21 +34,29 @@ class _HistoryPageState extends State<HistoryPage> {
         style: TextStyle(fontSize: 20.0, color: Colors.white),
       );
 
-  bool autoBool, autoBool2;
+  bool autoBool, autoBool2, loadHistory;
+  Widget dailyHistory, monthlyHistory;
   HistoryChoice state = HistoryChoice.daily;
+  Widget historyView = Container();
 
   @override
   void initState() {
     super.initState();
-
+    loadHistory = false;
     autoBool = widget.room.auto;
     autoBool2 = widget.room.switch1;
 //   autoBool = false;
 //   autoBool2 = false;
     if (autoBool == null) autoBool = false;
     if (autoBool2 == null) autoBool2 = false;
-    print(autoBool);
-    print(autoBool2);
+//    print(autoBool);
+//    print(autoBool2);
+    fetchHistory().then((val) =>
+        this.setState(() {
+          loadHistory = val;
+          if (loadHistory)
+            historyView = dailyHistory;
+        }));
   }
 
   Widget build(BuildContext context) {
@@ -135,7 +143,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ],
               ),
-              Expanded(
+              loadHistory
+                  ? Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(
                     right: 8.0,
@@ -145,12 +154,25 @@ class _HistoryPageState extends State<HistoryPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0)),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: null,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.9,
+                      child: historyView,
                     ),
                   ),
                 ),
-              ),
+              )
+                  : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      )
+                    ],
+                  )),
             ],
           ),
         ),
@@ -214,5 +236,57 @@ class _HistoryPageState extends State<HistoryPage> {
     if (!autoBool) {
       this.state = state;
     }
+    switch (state) {
+      case HistoryChoice.daily:
+        historyView = dailyHistory;
+        break;
+      case HistoryChoice.monthly:
+        historyView = monthlyHistory;
+        break;
+    }
+    setState(() {});
+  }
+
+  Future<bool> fetchHistory() async {
+    var daily = await http.get(
+        "http://13.234.156.214/web1/application/getRoomDailyPower.php?ROOM_ID=${widget
+            .room.id}");
+    var monthly = await http.get(
+        "http://13.234.156.214/web1/application/getRoomMonthlyPower.php?ROOM_ID=${widget
+            .room.id}");
+    List<dynamic> dailyResponse = json.decode(daily.body);
+    List<dynamic> monthlyResponse = json.decode(monthly.body);
+    dailyHistory = ListView.builder(
+      itemBuilder: (context, index) =>
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(dailyResponse[index]["DATE"]),
+                Text(dailyResponse[index]["TOTAL_POWER_CONSUMED"] + " W")
+              ],
+            ),
+          ),
+      itemCount: dailyResponse.length,
+    );
+    monthlyHistory = ListView.builder(
+      itemBuilder: (context, index) =>
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(monthlyResponse[index]["MONTH"] + " " +
+                    monthlyResponse[index]["YEAR"]),
+                Text(monthlyResponse[index]["TOTAL_POWER_CONSUMED"] + " W")
+              ],
+            ),
+          ),
+      itemCount: monthlyResponse.length,
+    );
+    return true;
   }
 }
