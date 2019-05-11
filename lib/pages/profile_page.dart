@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -7,12 +8,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final key = GlobalKey<ScaffoldState>();
-  bool editable;
+  bool editable, load;
+  FirebaseUser user;
 
   @override
   void initState() {
     super.initState();
     editable = false;
+    load = false;
+    FirebaseAuth.instance.currentUser().then((user) {
+      this.user = user;
+      setState(() {
+        load = true;
+      });
+    });
   }
 
   @override
@@ -62,12 +71,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              Padding(
+              user == null
+                  ? Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      )
+                    ],
+                  ))
+                  : Padding(
                 padding: const EdgeInsets.only(),
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Container(
+                    margin: EdgeInsets.only(bottom: 58.0),
                     width: MediaQuery
                         .of(context)
                         .size
@@ -76,68 +97,26 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding:
+                          const EdgeInsets.symmetric(vertical: 8.0),
                           child: Icon(
                             Icons.account_circle,
                             size: 100.0,
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Het Saliya",
-                            style: TextStyle(fontSize: 32.0),
-                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 24.0),
+                          child: Text(user.displayName,
+                            style: TextStyle(fontSize: 28.0),),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 28.0, vertical: 28.0),
-                          child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 24.0),
-                                  child: TextField(
-                                    enabled: editable,
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      labelText: "Username",
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 24.0),
-                                  child: TextField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      labelText: "Email",
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 24.0),
-                                  child: TextField(
-                                    keyboardType: TextInputType.phone,
-                                    enabled: editable,
-                                    decoration: InputDecoration(
-                                      labelText: "Mobile No",
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(
-                                    color: Color.fromRGBO(64, 139, 255, 100))),
-                          ),
-                        )
+                              vertical: 8.0, horizontal: 24.0),
+                          child: Text(
+                            user.email, style: TextStyle(fontSize: 22.0),),
+                        ),
+
                       ],
                     ),
                   ),
@@ -149,11 +128,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
 }
 
 class DisableFocus extends FocusNode {
-
   @override
   bool get hasFocus => false;
 }

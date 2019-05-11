@@ -103,16 +103,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, "/about"),
-                child: ListTile(
-                  leading: Icon(Icons.info, size: 32.0),
-                  title: Text(
-                    "About Us",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ),
-              ),
-              GestureDetector(
                 onTap: () {
                   prefs.setBool("loggedin", false);
                   firebaseAuth.signOut();
@@ -157,14 +147,7 @@ class _DashboardState extends State<Dashboard> {
                           "Dashboard",
                           style: TextStyle(fontSize: 22.0),
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, "/settings");
-                            },
-                            child: Icon(
-                              Icons.settings,
-                              size: 28.0,
-                            ))
+                        Text("  ", style: TextStyle(fontSize: 22.0),)
                       ],
                     ),
                   ),

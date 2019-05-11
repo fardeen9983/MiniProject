@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dashboard.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseAuth firebaseAuth;
   String password, mail;
   SharedPreferences prefs;
+
   @override
   void initState() {
     super.initState();
@@ -84,7 +86,70 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: FlatButton(
                           onPressed: () {
-
+                            TextEditingController mail =
+                            new TextEditingController();
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  SimpleDialog(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Enter your registered Email address : ",
+                                          style: TextStyle(fontSize: 22.0),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          controller: mail,
+                                          keyboardType:
+                                          TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          decoration: InputDecoration(
+                                              labelText: "Email",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      10.0))),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            FlatButton(
+                                                onPressed: () =>
+                                                    firebaseAuth
+                                                        .sendPasswordResetEmail(
+                                                        email: mail.text),
+                                                child: Container(
+                                                    child: Text(
+                                                      "Done",
+                                                      style:
+                                                      TextStyle(fontSize: 22.0),
+                                                    ))),
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                    child: Text(
+                                                      "Cancel",
+                                                      style:
+                                                      TextStyle(fontSize: 22.0),
+                                                    )))
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                            );
                           },
                           child: Text(
                             "Forgot Password",
@@ -154,10 +219,10 @@ class _LoginPageState extends State<LoginPage> {
         .then((user) {
       prefs.setBool("loggedin", true);
       prefs.setString("uid", user.uid);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Dashboard()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
     }).catchError((e) =>
-        key.currentState.showSnackBar(SnackBar(
-            content: Text("Error : Unable to sign in try again"))));
+        key.currentState.showSnackBar(
+            SnackBar(content: Text("Error : Unable to sign in try again"))));
   }
 }

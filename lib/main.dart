@@ -8,7 +8,6 @@ import 'pages/notification_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/register_page.dart';
 import 'pages/room_page.dart';
-import 'pages/settings_page.dart';
 import 'pages/splash_page.dart';
 
 void main() => runApp(MyApp());
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
           "/about": (context) => AboutPage(),
           "/login": (context) => LoginPage(),
           "/dashboard": (context) => Dashboard(),
-          "/settings": (context) => SettingsPage(),
           "/profile": (context) => ProfilePage(),
           "/blocks": (context) => BlockPage(),
         },

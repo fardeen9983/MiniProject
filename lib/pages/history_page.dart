@@ -54,8 +54,7 @@ class _HistoryPageState extends State<HistoryPage> {
     fetchHistory().then((val) =>
         this.setState(() {
           loadHistory = val;
-          if (loadHistory)
-            historyView = dailyHistory;
+          if (loadHistory) historyView = dailyHistory;
         }));
   }
 
@@ -158,7 +157,10 @@ class _HistoryPageState extends State<HistoryPage> {
                           .of(context)
                           .size
                           .width * 0.9,
-                      child: historyView,
+                      child: Padding(
+                        padding: EdgeInsets.all(22.0),
+                        child: historyView,
+                      ),
                     ),
                   ),
                 ),
@@ -204,6 +206,7 @@ class _HistoryPageState extends State<HistoryPage> {
         autoBool2 = false;
       });
       response = await http.get(x);
+      print(response);
       //  prefs.setBool('autoBool'+widget.room.id, true);
 
     }
@@ -261,12 +264,21 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
             decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(dailyResponse[index]["DATE"]),
-                Text(dailyResponse[index]["TOTAL_POWER_CONSUMED"] + " W")
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    dailyResponse[index]["DATE"],
+                    style: TextStyle(fontSize: 22.0),
+                  ),
+                  Text(
+                    dailyResponse[index]["TOTAL_POWER_CONSUMED"] + " W",
+                    style: TextStyle(fontSize: 22.0),
+                  )
+                ],
+              ),
             ),
           ),
       itemCount: dailyResponse.length,
@@ -276,17 +288,61 @@ class _HistoryPageState extends State<HistoryPage> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
             decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(monthlyResponse[index]["MONTH"] + " " +
-                    monthlyResponse[index]["YEAR"]),
-                Text(monthlyResponse[index]["TOTAL_POWER_CONSUMED"] + " W")
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(22.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      getMonth(int.parse(monthlyResponse[index]["MONTH"])) +
+                          " " +
+                          monthlyResponse[index]["YEAR"],
+                      style: TextStyle(fontSize: 22.0),
+                    ),
+                    Text(
+                      monthlyResponse[index]["TOTAL_POWER"] + " W",
+                      style: TextStyle(fontSize: 22.0),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
       itemCount: monthlyResponse.length,
     );
     return true;
+  }
+
+  String getMonth(int x) {
+    switch (x) {
+      case 1:
+        return "JAN";
+      case 2:
+        return "FEB";
+      case 3:
+        return "MAR";
+      case 4:
+        return "APR";
+      case 5:
+        return "MAY";
+      case 6:
+        return "JUN";
+      case 7:
+        return "JUL";
+      case 8:
+        return "AUG";
+      case 9:
+        return "SEP";
+      case 10:
+        return "OCT";
+      case 11:
+        return "NOV";
+      case 12:
+        return "DEC";
+      default:
+        return "JAN";
+    }
   }
 }
